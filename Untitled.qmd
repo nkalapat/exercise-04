@@ -1,0 +1,45 @@
+---
+title: "Wordle"
+format: html
+---
+
+w <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/collins-scrabble-words-2019.txt"
+ns <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/google-10000-english-usa-no-swears.txt"
+
+load_dictionary <- function(filename) {
+ table <- read.table(filename, header=T)
+ as.vector(table[,1])
+}
+solution_list <- load_dictionary(ns)
+valid_list <- load_dictionary(w)
+str(valid_list)
+str(solution_list)
+
+solution_list <- intersect(valid_list, solution_list)
+length(solution_list)
+
+pick_solution <- function(filename, wordLength = 5) {
+ strsplit(sample(filename[nchar(filename) == wordLength], size = 1), split = NULL)[[1]]
+}
+solution <- pick_solution(solution_list)
+
+play_wordle <- function(solution, valid_list, num_guesses=6) {
+  cat("You have", num_guesses,"chances left to guess a word of length", length(solution), "\n")
+  cat("Letters left:", LETTERS, "\n")
+  guess_num <- 1
+  while(guess_num <= num_guesses) {
+    guess <- toupper(readline(prompt =  cat("Enter guess number", guess_num, "\n")))
+    if (nchar(guess) == 5 && guess %in% valid_list) {
+      print("Valid guess!")
+      guess_num <- guess_num + 1
+      solution == guess
+    } 
+    else {
+      print("Invalid guess.")
+    }
+  }
+}
+play_wordle(solution, valid_list, num_guesses=6)
+
+
+

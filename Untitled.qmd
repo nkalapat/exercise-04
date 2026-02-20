@@ -19,20 +19,42 @@ solution_list <- intersect(valid_list, solution_list)
 length(solution_list)
 
 pick_solution <- function(filename, wordLength = 5) {
- strsplit(sample(filename[nchar(filename) == wordLength], size = 1), split = NULL)[[1]]
+ strsplit(sample(filename[nchar(filename) == wordLength], size = 1), split = "")[[1]]
 }
 solution <- pick_solution(solution_list)
 
 play_wordle <- function(solution, valid_list, num_guesses=6) {
   cat("You have", num_guesses,"chances left to guess a word of length", length(solution), "\n")
   cat("Letters left:", LETTERS, "\n")
+  evaluate_guess <- function(guess, solution) {
+    if(identical(solution, guess) == TRUE) {
+      print("Correct!")
+    }
+    else {
+      guess_eval <- c(strsplit(guess, split = ""))[[1]]
+      solution_eval <- c(strsplit(solution, split = "")) [[1]]
+      for(i in 1:length(guess)) {
+        if(guess_eval[i] == solution_eval[i]) {
+          print("*")
+        }
+        else {
+          for(j in 1:length(solution)) {
+            if(guess_eval[i] == solution_eval[j]) {
+              print("+")
+            }
+            else print("-")
+          }
+        }
+      }
+    }
+  }
   guess_num <- 1
   while(guess_num <= num_guesses) {
     guess <- toupper(readline(prompt =  cat("Enter guess number", guess_num, "\n")))
     if (nchar(guess) == 5 && guess %in% valid_list) {
       print("Valid guess!")
       guess_num <- guess_num + 1
-      solution == guess
+      evaluate_guess(guess, solution)
     } 
     else {
       print("Invalid guess.")

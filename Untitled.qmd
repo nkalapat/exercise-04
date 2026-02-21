@@ -4,57 +4,52 @@ format: html
 ---
 
 w <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/collins-scrabble-words-2019.txt"
-ns <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/google-10000-english-usa-no-swears.txt"
-
-library(dplyr)
+ns <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/google-10000-english-usa-no-swears.txt" # loading in the lists of words we will use
 
 load_dictionary <- function(filename) {
  table <- read.table(filename, header=T)
  as.vector(table[,1])
-}
-solution_list <- load_dictionary(ns)
-valid_list <- load_dictionary(w)
-str(valid_list)
-str(solution_list)
+} # general function for turning our lists of words into a workable format
+solution_list <- load_dictionary(ns) # list of possible solutions for our game
+valid_list <- load_dictionary(w) # list of words our game will accept as guesses (larger than solution_list)
 
-solution_list <- intersect(valid_list, solution_list)
-length(solution_list)
+solution_list <- intersect(valid_list, solution_list) # making sure the only possible solution words are also included in the list of valid guesses
 
 pick_solution <- function(filename, wordLength = 5) {
- strsplit(sample(filename[nchar(filename) == wordLength], size = 1), split = "")[[1]]
-}
-solution <- pick_solution(solution_list)
+  strsplit(sample(filename[nchar(filename) == wordLength], size = 1), split = "")[[1]]
+} # chooses a random word from the solution list that matches the word length required for the game
+solution <- pick_solution(solution_list) # generates a random word from the function above
 
 play_wordle <- function(solution, valid_list, num_guesses=6) {
   cat("You have", num_guesses,"chances left to guess a word of length", length(solution), "\n")
   cat("Letters left:", LETTERS, "\n")
-  evaluate_guess <- function(guess, solution) {
-    guess_eval <- c(strsplit(guess, split = ""))[[1]]
+  evaluate_guess <- function(guess, solution) { # determines if the guess is the solution, and if not, goes letter-by-letter to see if any of the guess letters match any of the solution letters
+    guess_eval <- c(strsplit(guess, split = ""))[[1]] # turns the guess word into a character list of individual letters
     if(identical(solution, guess_eval) == TRUE) {
       print("Correct!")
     }
     else {
-      for(i in 1:5) {
+      for(i in 1:length(solution)) { # checks the guess word one letter at a time
         if(isTRUE(guess_eval[i] == solution[i])) {
-          print(c(guess_eval[i], "*"))
+          print(c(guess_eval[i], "*")) # for if the guess letter is in solution word and in the right place
         }
         else if(isTRUE(guess_eval[i] %in% solution)) {
-          print(c(guess_eval[i], "+"))
+          print(c(guess_eval[i], "+")) # for if the guess letter is in the solution word but in the wrong place
         }
-        else print(c(guess_eval[i], "-"))
+        else print(c(guess_eval[i], "-")) # for if the guess letter is not in the solution word at all
       }
     }
   }
-  guess_num <- 1
-  while(guess_num <= num_guesses) {
-    guess <- toupper(readline(prompt =  cat("Enter guess number", guess_num, "\n")))
-    if (nchar(guess) == 5 && guess %in% valid_list) {
+  guess_num <- 1 # guess counter
+  while(guess_num <= num_guesses) { # checks if the guess counter has exceeded the number of allowed guesses
+    guess <- toupper(readline(prompt =  cat("Enter guess number", guess_num, "\n"))) # turns the guess word into all upper case to match the solution word's case
+    if (nchar(guess) == length(solution) && guess %in% valid_list) { # checks if the guess word is in the list of valid guess words; if it is, then the guess counter goes up, it's checked if it's the solution word, and the player gets feedback on which letters are correct and/or in the right place
       print("Valid guess!")
-      guess_num <- guess_num + 1
+      guess_num <- guess_num + 1 # increases the guess counter
       evaluate_guess(guess, solution)
     } 
     else {
-      print("Invalid guess.")
+      print("Invalid guess.") # the guess counter does not increase if the guess word was invalid
     }
   }
 }

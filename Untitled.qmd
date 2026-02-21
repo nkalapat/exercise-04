@@ -3,6 +3,7 @@ title: "Wordle"
 format: html
 ---
 
+``` {r}
 w <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/collins-scrabble-words-2019.txt"
 ns <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/google-10000-english-usa-no-swears.txt" # loading in the lists of words we will use
 
@@ -25,8 +26,10 @@ play_wordle <- function(solution, valid_list, num_guesses=6) {
   cat("Letters left:", LETTERS, "\n")
   evaluate_guess <- function(guess, solution) { # determines if the guess is the solution, and if not, goes letter-by-letter to see if any of the guess letters match any of the solution letters
     guess_eval <- c(strsplit(guess, split = ""))[[1]] # turns the guess word into a character list of individual letters
+    correct <- FALSE
     if(identical(solution, guess_eval) == TRUE) {
-      print("Correct!")
+      correct <- TRUE
+      return(correct)
     }
     else {
       for(i in 1:length(solution)) { # checks the guess word one letter at a time
@@ -46,11 +49,17 @@ play_wordle <- function(solution, valid_list, num_guesses=6) {
     if (nchar(guess) == length(solution) && guess %in% valid_list) { # checks if the guess word is in the list of valid guess words; if it is, then the guess counter goes up, it's checked if it's the solution word, and the player gets feedback on which letters are correct and/or in the right place
       print("Valid guess!")
       guess_num <- guess_num + 1 # increases the guess counter
-      evaluate_guess(guess, solution)
+      correct <- evaluate_guess(guess, solution)
+      if(isTRUE(correct == TRUE)) {
+        print("You did it! Congrats!")
+        stop() # ends function early since the player guessed correctly
+      }
     } 
     else {
       print("Invalid guess.") # the guess counter does not increase if the guess word was invalid
     }
   }
+  print("Sorry, you're out of guesses! Try again another time!") # failure message; only comes up if you exceed the number of allowed guesses
 }
 play_wordle(solution, valid_list, num_guesses=6)
+```

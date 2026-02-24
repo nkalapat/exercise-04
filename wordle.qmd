@@ -6,8 +6,6 @@ format: html
 Let's load our lists of words in and make sure the solution list only contains words found in the list of valid guesses:
 
 ``` {r}
-#| include: false
-
 w <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/collins-scrabble-words-2019.txt"
 ns <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/google-10000-english-usa-no-swears.txt" # loading in the lists of words we will use
 
@@ -32,8 +30,6 @@ pick_solution <- function(filename, wordLength = 5) {
 And now we can create the actual game:
 
 ``` {r}
-#| include: false
-
 play_wordle <- function(solution, valid_list, num_guesses=6) {
   cat("You have", num_guesses,"chances left to guess a word of length", length(solution), "\n")
   letters_left <- LETTERS
@@ -117,7 +113,7 @@ solution <- pick_solution(solution_list) # generates a random word from the pick
 And now, let's play!
 
 ``` {r}
-#| include: false
+#| eval: false
 
 play_wordle(solution, valid_list, num_guesses=6)
 ```
@@ -125,7 +121,7 @@ play_wordle(solution, valid_list, num_guesses=6)
 If you want to get right into the game with a brand new word with just one line of code:
 
 ``` {r}
-#| include: false
+#| eval: false
 
 play_wordle(pick_solution(solution_list), valid_list)
 ```
@@ -133,7 +129,7 @@ play_wordle(pick_solution(solution_list), valid_list)
 And if you want to have a bit of fun with the word length and number of allowed guesses:
 
 ``` {r}
-#| include: false
+#| eval: false
 
 play_wordle(pick_solution(solution_list, wordLength = sample(2:16, size = 1)), valid_list, num_guesses = sample(3:20, size = 1))
 ```

@@ -6,8 +6,6 @@ format: html
 Let's load our lists of words in and make sure the solution list only contains words found in the list of valid guesses:
 
 ``` {r}
-#| include: false
-
 w <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/collins-scrabble-words-2019.txt"
 ns <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/google-10000-english-usa-no-swears.txt" # loading in the lists of words we will use
 
@@ -32,8 +30,6 @@ pick_solution <- function(filename, wordLength = 5) {
 And now we can create the actual game:
 
 ``` {r}
-#| include: false
-
 play_wordle <- function(solution, valid_list, num_guesses=6) {
   cat("You have", num_guesses,"chances left to guess a word of length", length(solution), "\n")
   letters_left <- LETTERS
@@ -65,7 +61,8 @@ play_wordle <- function(solution, valid_list, num_guesses=6) {
   guess_num <- 1 # guess counter
   words_guessed <- c() # initializes the list that will keep track of the valid guesses
   evals_history <- c() # keeps track of each valid guess' evaluation
-  while(guess_num <= num_guesses) { # checks if the guess counter has exceeded the number of allowed guesses
+  correct <- FALSE # checks if the solution was correctly guessed
+  while(guess_num <= num_guesses & correct == FALSE) { # checks if the guess counter has exceeded the number of allowed guesses
     guess <- toupper(readline(prompt =  cat("Enter guess number", guess_num, "\n"))) # turns the guess word into all upper case to match the solution word's case
     if (nchar(guess) == length(solution) && guess %in% valid_list) { # checks if the guess word is in the list of valid guess words; if it is, then the guess counter goes up, it's checked if it's the solution word, and the player gets feedback on which letters are correct and/or in the right place
       words_guessed <- append(words_guessed, guess) # adds valid guess to guess history
@@ -77,7 +74,6 @@ play_wordle <- function(solution, valid_list, num_guesses=6) {
         cat("You did it! Congrats!", "\n")
         cat("Your guesses: ", words_guessed, "\n")
         cat("              ", evals_history, "\n")
-        stop() # ends function early since the player guessed correctly
       }
       else {
         letters_left <- setdiff(letters_left, c(strsplit(guess, split = ""))[[1]]) # updates list of letters not yet guessed
@@ -86,22 +82,24 @@ play_wordle <- function(solution, valid_list, num_guesses=6) {
     } 
     else cat("Invalid guess.", "\n") # the guess counter does not increase if the guess word was invalid
   }
-  cat("Sorry, you're out of guesses! Try again another time!", "\n") # failure message; only comes up if you exceed the number of allowed guesses
-  cat("Your guesses: ", words_guessed, "\n")
-  cat("              ", evals_history, "\n")
-  see_sol_valid <- FALSE
-  while(isTRUE(see_sol_valid == FALSE)) {
-    see_sol <- toupper(readline(prompt =  cat("Do you want to see the solution?", "\n")))
-    if(identical(see_sol, "YES") || identical(see_sol, "Y")) {
-      see_sol_valid <- TRUE
-      cat(paste(solution, collapse = ""), "was the correct answer.", "\n")
-      cat("Good luck next time!", "\n")
+  if(guess_num > num_guesses + 1) { # only runs if number of guesses exceeds allowed number
+    cat("Sorry, you're out of guesses! Try again another time!", "\n") # failure message; only comes up if you exceed the number of allowed guesses
+    cat("Your guesses: ", words_guessed, "\n")
+    cat("              ", evals_history, "\n")
+    see_sol_valid <- FALSE
+    while(isTRUE(see_sol_valid == FALSE)) {
+      see_sol <- toupper(readline(prompt =  cat("Do you want to see the solution?", "\n")))
+      if(identical(see_sol, "YES") || identical(see_sol, "Y")) {
+        see_sol_valid <- TRUE
+        cat(paste(solution, collapse = ""), "was the correct answer.", "\n")
+        cat("Good luck next time!", "\n")
+      }
+      else  if(identical(see_sol, "NO") || identical(see_sol, "N")){
+        see_sol_valid <- TRUE
+        cat("Good luck next time!", "\n")
+      }
+      else cat("Invalid response.", "\n")
     }
-    else  if(identical(see_sol, "NO") || identical(see_sol, "N")){
-      see_sol_valid <- TRUE
-      cat("Good luck next time!", "\n")
-    }
-    else cat("Invalid response.", "\n")
   }
 }
 ```
@@ -115,23 +113,17 @@ solution <- pick_solution(solution_list) # generates a random word from the pick
 And now, let's play!
 
 ``` {r}
-#| include: false
-
 play_wordle(solution, valid_list, num_guesses=6)
 ```
 
 If you want to get right into the game with a brand new word with just one line of code:
 
 ``` {r}
-#| include: false
-
 play_wordle(pick_solution(solution_list), valid_list)
 ```
 
 And if you want to have a bit of fun with the word length and number of allowed guesses:
 
 ``` {r}
-#| include: false
-
 play_wordle(pick_solution(solution_list, wordLength = sample(2:16, size = 1)), valid_list, num_guesses = sample(3:20, size = 1))
 ```

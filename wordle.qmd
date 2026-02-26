@@ -84,7 +84,7 @@ play_wordle <- function(solution, valid_list, num_guesses=6) {
     } 
     else cat("Invalid guess.", "\n") # the guess counter does not increase if the guess word was invalid
   }
-  if(guess_num > num_guesses + 1) { # only runs if number of guesses exceeds allowed number
+  if(guess_num > num_guesses & correct == FALSE) { # only runs if number of guesses exceeds allowed number
     cat("Sorry, you're out of guesses! Try again another time!", "\n") # failure message; only comes up if you exceed the number of allowed guesses
     cat("Your guesses: ", words_guessed, "\n")
     cat("              ", evals_history, "\n")

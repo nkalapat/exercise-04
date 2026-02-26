@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="wordle_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="wordle_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="wordle_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="wordle_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="wordle_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -173,7 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    } </span>
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="fu">cat</span>(<span class="st">"Invalid guess."</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="co"># the guess counter does not increase if the guess word was invalid</span></span>
 <span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(guess_num <span class="sc">&gt;</span> num_guesses <span class="sc">+</span> <span class="dv">1</span>) { <span class="co"># only runs if number of guesses exceeds allowed number</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(guess_num <span class="sc">&gt;</span> num_guesses <span class="sc">&amp;</span> correct <span class="sc">==</span> <span class="cn">FALSE</span>) { <span class="co"># only runs if number of guesses exceeds allowed number</span></span>
 <span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Sorry, you're out of guesses! Try again another time!"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="co"># failure message; only comes up if you exceed the number of allowed guesses</span></span>
 <span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Your guesses: "</span>, words_guessed, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
 <span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"              "</span>, evals_history, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>

@@ -30,6 +30,8 @@ pick_solution <- function(filename, wordLength = 5) {
 And now we can create the actual game:
 
 ``` {r}
+#| eval: false
+
 play_wordle <- function(solution, valid_list, num_guesses=6) {
   cat("You have", num_guesses,"chances left to guess a word of length", length(solution), "\n")
   letters_left <- LETTERS
